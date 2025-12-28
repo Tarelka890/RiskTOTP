@@ -128,7 +128,7 @@ def verify_totp_for_operator(operator):
 
 def main():
     if len(sys.argv) != 3:
-        print(f"Использование: {sys.argv[0]} <user> add <public_key>")
+        print(f"Использование: {Path(sys.argv[0]).name} <user> add <public_key>")
         sys.exit(1)
 
     try:
