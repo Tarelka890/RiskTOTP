@@ -189,7 +189,9 @@ def main():
         key = sys.argv[3]
         operator = os.environ.get("SUDO_USER")
         action = "secure-sshkeys"
-
+        if not operator:
+            print("Необходим запуск через sudo")
+            sys.exit(1)
         conn = init_db()
         check_bruteforce(conn, operator, action)
 
