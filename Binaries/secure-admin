@@ -154,24 +154,24 @@ def main():
             if ns.create_home:
                 cmd += ["-m"]
             cmd += ["-s", DEFAULT_SHELL, ns.user]
-            res = subprocess.run(cmd)
-            sys.exit(0 if res.returncode == 0 else 1)
+            subprocess.run(cmd)
+            sys.exit(0)
 
         if ns.cmd == "usermod":
             validate_user_exists(ns.user)
 
             if ns.op == "lock":
-                res = subprocess.run(["/usr/sbin/usermod", "-L", ns.user])
-                sys.exit(0 if res.returncode == 0 else 1)
+                subprocess.run(["/usr/sbin/usermod", "-L", ns.user])
+                sys.exit(0)
 
             if ns.op == "unlock":
-                res = subprocess.run(["/usr/sbin/usermod", "-U", ns.user])
-                sys.exit(0 if res.returncode == 0 else 1)
+                subprocess.run(["/usr/sbin/usermod", "-U", ns.user])
+                sys.exit(0)
 
             if ns.op == "add-groups":
                 groups = validate_groups(ns.groups)
-                res = subprocess.run(["/usr/sbin/usermod", "-aG", groups, ns.user])
-                sys.exit(0 if res.returncode == 0 else 1)
+                subprocess.run(["/usr/sbin/usermod", "-aG", groups, ns.user])
+                sys.exit(0)
 
     except KeyboardInterrupt:
         print('\n')

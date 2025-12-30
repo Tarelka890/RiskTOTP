@@ -4,14 +4,13 @@ apt update
 
 cp ./Binaries/secure-passwd   /usr/local/sbin/secure-passwd
 cp ./Binaries/secure-sshkeys  /usr/local/sbin/secure-sshkeys
-cp ./Binaries/secure-usermod  /usr/local/sbin/secure-usermod
-cp ./Binaries/secure-useradd  /usr/local/sbin/secure-useradd
+cp ./Binaries/secure-admin  /usr/local/sbin/secure-admin
 
 chown root:root /usr/local/sbin/secure-passwd /usr/local/sbin/secure-sshkeys
 chmod 0755      /usr/local/sbin/secure-passwd /usr/local/sbin/secure-sshkeys
 
-chown root:root /usr/local/sbin/secure-usermod /usr/local/sbin/secure-useradd
-chmod 0755      /usr/local/sbin/secure-usermod /usr/local/sbin/secure-useradd
+chown root:root /usr/local/sbin/secure-admin /usr/local/sbin/secure-admin
+chmod 0755      /usr/local/sbin/secure-admin /usr/local/sbin/secure-admin
 
 echo "! Binaries setup complete."
 
