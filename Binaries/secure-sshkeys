@@ -42,17 +42,17 @@ def read_pubkey_file(path_str, user, action):
     if os.path.islink(p):
         print("Файл ключа не должен быть symlink.")
         audit("read_key", user, action, target=sys.argv[1], argv=sys.argv[1:], result="FAIL_SYMLINK")
-        return
+        sys.exit(1)
     if not p.exists():
         print("Файл ключа не найден.")
         audit("read_key", user, action, target=sys.argv[1], argv=sys.argv[1:], result="NO_FILE")
-        return
+        sys.exit(1)
 
     data = p.read_text(encoding="utf-8", errors="strict").strip()
     if "\n" in data or "\r" in data:
         print("Public key должен быть одной строкой.")
         audit("read_key", user, action, target=sys.argv[1], argv=sys.argv[1:], result="FAIL_READ")
-        return
+        sys.exit(1)
     audit("read_key", user, action, target=sys.argv[1], argv=sys.argv[1:], result="READ_SUCCESS")
     return data
 
@@ -117,7 +117,7 @@ def remove_pubkey(operator, user, key_line):
     if key_line not in existing:
         print("Ключ не найден в authorized_keys.")
         audit("check_existing", operator, "secure-sshkeys", target=sys.argv[1], argv=sys.argv[1:], result="KEY_MISSING")
-        return
+        sys.exit(1)
 
     #can't think of a better way to do this
     new_lines = [line for line in existing if line != key_line]
@@ -255,7 +255,7 @@ def main():
         else:
             print("Неверный выбор. Доступны add/remove")
             audit("wrong_choice", operator, action, target=target, argv=sys.argv[1:], result="WRONG_CHOICE")
-            exit(1)
+            sys.exit(1)
     except KeyboardInterrupt:
         print('\n')
         sys.exit(130)
