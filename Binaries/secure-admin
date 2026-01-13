@@ -200,7 +200,7 @@ def main():
 
         audit("exec", operator, "secure-admin", target=str(app_id),
               argv=[str(app_id)], result="RUN_APPROVED",
-              extra={"approver": approver, "requester": requester, "saved_argv": argv_list})
+              extra={"approver": approver, "requester": requester, "saved_argv": argv_list, "approval_id":app_id})
 
         if len(argv_list) >= 3 and argv_list[0] == "usermod":
             op = argv_list[1]
@@ -208,7 +208,7 @@ def main():
             #only this for now
             if op == "unlock":
                 subprocess.run(["/usr/sbin/usermod", "-U", user], check=True)
-                audit("exec", operator, "secure-admin", target=user, argv=argv_list, result="DONE_APPROVED_UNLOCK")
+                audit("exec", operator, "secure-admin", target=user, argv=argv_list, result="DONE_APPROVED_UNLOCK", extra={"approval_id":app_id})
                 sys.exit(0)
 
             if op == "add-groups":
@@ -217,7 +217,7 @@ def main():
                     sys.exit(4)
                 groups = argv_list[3]
                 subprocess.run(["/usr/sbin/usermod", "-aG", groups, user], check=True)
-                audit("exec", operator, "secure-admin", target=user, argv=argv_list, result="DONE_APPROVED_GROUPS")
+                audit("exec", operator, "secure-admin", target=user, argv=argv_list, result="DONE_APPROVED_GROUPS", extra={"approval_id":app_id})
                 sys.exit(0)
 
         print("Заявка содержит неподдерживаемую команду.")
