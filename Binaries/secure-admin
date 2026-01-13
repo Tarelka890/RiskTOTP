@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import hashlib
 import sys, getpass, subprocess, time, sqlite3, os
 from pathlib import Path
 import pyotp
@@ -51,6 +52,28 @@ def require_approved(conn, app_id):
         sys.exit(3)
     return requester, action, target, json.loads(argv_json), risk, approver
 
+def get_last_hash():
+    if not AUDIT_LOG.exists(): # which is strange
+        return "0" * 64
+    try:
+        # read last line
+        with AUDIT_LOG.open("rb") as f:
+            f.seek(0, 2) # from the end
+            size = f.tell()
+            if size == 0:
+                return "0" * 64
+            # read back
+            back = min(8192, size)
+            f.seek(-back, 2)
+            tail = f.read().splitlines()
+            for line in reversed(tail):
+                if line.strip():
+                    obj = json.loads(line.decode("utf-8", "ignore"))
+                    return obj.get("hash", "0"*64) # return last line hash
+    except Exception:
+        return "0" * 64 # any other way
+    return "0" * 64
+
 def audit(event, operator, action, target="", argv=None, result="", extra=None):
     AUDIT_LOG.parent.mkdir(parents=True, exist_ok=True)
     rec = {
@@ -61,12 +84,16 @@ def audit(event, operator, action, target="", argv=None, result="", extra=None):
         "action": action,
         "target": target,
         "argv": argv or [],
-        "result": result,        # "OK", "DENY", "FAIL(error code)"
+        "result": result,
         "extra": extra or {},
     }
+    prev = get_last_hash()
+    rec["prev_hash"] = prev
+    payload = json.dumps(rec, ensure_ascii=False, sort_keys=True, separators=(",", ":")) # dump last entry
+    rec["hash"] = hashlib.sha256((prev + payload).encode("utf-8")).hexdigest() # get hash
     line = json.dumps(rec, ensure_ascii=False)
-    with open(AUDIT_LOG, "a", encoding="utf-8") as f:
-        f.write(line + "\n")
+    with AUDIT_LOG.open("a", encoding="utf-8") as f:
+        f.write(line + "\n") # hopefully write
 
 def require_sudo_user():
     op = os.environ.get("SUDO_USER")
