@@ -48,8 +48,7 @@ RiskTOTP добавляет **второй фактор (TOTP)** не тольк
 - Пакеты: `apparmor`, `apparmor-utils`, `sqlite3`, `python3-pyotp`
 
 ## Быстрая установка (рекомендуется)
-bash
-sudo bash install.sh
+`sudo bash install.sh`
 Скрипт:
 
 * копирует бинарники/скрипты в `/usr/local/sbin/`
@@ -68,25 +67,21 @@ sudo bash install.sh
 
 1. Установите модуль:
 
-bash
-sudo apt install libpam-google-authenticator
+`sudo apt install libpam-google-authenticator`
 
 2. Для пользователя, который входит по SSH:
 
-bash
-google-authenticator
+`google-authenticator`
 
 3. Включите в PAM sshd (пример, может отличаться по дистрибутиву):
    `/etc/pam.d/sshd`:
 
-text
 auth required pam_google_authenticator.so nullok
 @include common-auth
 
 4. Перезапустите SSH:
 
-bash
-sudo systemctl restart ssh
+`sudo systemctl restart ssh`
 
 ## 2) Для операторов (secure-*)
 
@@ -101,47 +96,40 @@ sudo systemctl restart ssh
 
 Смена пароля пользователя с подтверждением TOTP оператора:
 
-bash
-sudo secure-passwd <user>
+`sudo secure-passwd <user>`
 
 ## secure-sshkeys
 
 Добавить ключ строкой:
 
-bash
-sudo secure-sshkeys <user> add "ssh-ed25519 AAAA... comment"
+`sudo secure-sshkeys <user> add "ssh-ed25519 AAAA... comment"`
 
 Добавить ключ из файла:
 
-bash
-sudo secure-sshkeys <user> add-file /tmp/key.pub
+`sudo secure-sshkeys <user> add-file /tmp/key.pub`
 
 Удалить ключ строкой:
 
-bash
-sudo secure-sshkeys <user> remove "ssh-ed25519 AAAA... comment"
+`sudo secure-sshkeys <user> remove "ssh-ed25519 AAAA... comment"`
 
 Удалить ключ из файла:
 
-bash
-sudo secure-sshkeys <user> remove-file /tmp/key.pub
+`sudo secure-sshkeys <user> remove-file /tmp/key.pub`
 
 ## secure-admin
 
 Примеры:
 
-bash
-sudo secure-admin useradd <new_user>
-sudo secure-admin usermod lock <user>
-sudo secure-admin usermod add-groups <user> operators
-`
+`sudo secure-admin useradd <new_user>`
+`sudo secure-admin usermod lock <user>`
+`sudo secure-admin usermod add-groups <user> operators`
 
 ## Просмотр аудита
 
-sudo secure-audit-view --tail 50
-sudo secure-audit-view --approvals
-sudo secure-audit-view --id 4
-sudo secure-audit-view --verify
+`sudo secure-audit-view --tail 50`
+`sudo secure-audit-view --approvals`
+`sudo secure-audit-view --id 4`
+`sudo secure-audit-view --verify`
 ---
 
 # Аудит и анти-брут
