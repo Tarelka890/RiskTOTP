@@ -1,0 +1,25 @@
+#include <tunables/global>
+
+/usr/local/sbin/secure-approve flags=(enforce) {
+  include <abstractions/base>
+  include <abstractions/nameservice>
+
+  capability dac_override,
+  capability dac_read_search,
+
+  /dev/pts/* rw,
+  /dev/tty rw,
+
+  /home/*/.google_authenticator r,
+
+  /usr/bin/python3 ix,
+  /usr/bin/python3.13 ix,
+
+  /usr/local/sbin/secure-approve r,
+  /usr/local/sbin/secure-admin ix,
+  /usr/local/sbin/secure-passwd ix,
+  /usr/local/sbin/secure-sshkeys ix,
+
+  /var/lib/risktotp/** rwk,
+  /var/log/risktotp/** rwk,
+}

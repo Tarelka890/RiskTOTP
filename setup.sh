@@ -37,16 +37,19 @@ install -o root -g root -m 0644 ./AppArmor/passwd_aa      /etc/apparmor.d/usr.lo
 install -o root -g root -m 0644 ./AppArmor/sshkeys_aa     /etc/apparmor.d/usr.local.sbin.secure-sshkeys
 install -o root -g root -m 0644 ./AppArmor/admin_aa /etc/apparmor.d/usr.local.sbin.secure-admin
 install -o root -g root -m 0644 ./AppArmor/audit_aa  /etc/apparmor.d/usr.local.sbin.secure-audit-view
+install -o root -g root -m 0644 ./AppArmor/approve_aa /etc/apparmor.d/usr.local.sbin.secure_approve
 
 apparmor_parser -r /etc/apparmor.d/usr.local.sbin.secure-passwd -W
 apparmor_parser -r /etc/apparmor.d/usr.local.sbin.secure-sshkeys -W
 apparmor_parser -r /etc/apparmor.d/usr.local.sbin.secure-admin -W
 apparmor_parser -r /etc/apparmor.d/usr.local.sbin.secure-audit-view -W
+apparmor_parser -r /etc/apparmor.d/usr.local.sbin.secure-approve -W
 
 aa-enforce /usr/local/sbin/secure-passwd
 aa-enforce /usr/local/sbin/secure-sshkeys
 aa-enforce /usr/local/sbin/secure-admin
 aa-enforce /usr/local/sbin/secure-audit-view
+aa-enforce /usr/local/sbin/secure-approve
 
 echo "! AppArmor setup complete."
 
