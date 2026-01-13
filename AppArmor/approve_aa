@@ -4,8 +4,12 @@
   include <abstractions/base>
   include <abstractions/nameservice>
 
+  capability audit_write,
+  capability chown,
   capability dac_override,
   capability dac_read_search,
+  capability fowner,
+  capability fsetid,
 
   /dev/pts/* rw,
   /dev/tty rw,
