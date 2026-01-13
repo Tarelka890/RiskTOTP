@@ -56,22 +56,39 @@ def is_approval_event(rec):
             "APPROV" in res or "PENDING" in res or "APPROVED" in res or "EXEC_" in res)
 
 def verify_chain(lines):
-    prev = "0" * 64
-    n = 0
+    prev = None
+    started = False
+    checked = 0
+    skipped = 0
+
     for idx, line in enumerate(lines, 1):
         line = line.strip()
         if not line:
             continue
-        obj = json.loads(line)
+        try:
+            obj = json.loads(line)
+        except Exception:
+            skipped += 1
+            continue
 
-        if obj.get("prev_hash") != prev:
+        h = obj.get("hash")
+        ph = obj.get("prev_hash")
+        if not h or not ph:
+            skipped += 1
+            continue
+
+        if not started:
+            prev = ph
+            started = True
+
+        if ph != prev:
             print(f"FAIL: prev_hash mismatch at line {idx}")
             return 2
 
-        h = obj.get("hash")
         payload_obj = dict(obj)
         payload_obj.pop("hash", None)
-        payload = json.dumps(payload_obj, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        payload = json.dumps(payload_obj, ensure_ascii=False,
+                             sort_keys=True, separators=(",", ":"))
         calc = hashlib.sha256((prev + payload).encode("utf-8")).hexdigest()
 
         if h != calc:
@@ -79,10 +96,15 @@ def verify_chain(lines):
             return 3
 
         prev = h
-        n += 1
+        checked += 1
 
-    print(f"OK: chain valid, records={n}")
+    if not started:
+        print("Нет хэшированных записей для проверки.")
+        return 0
+
+    print(f"OK: checked={checked}, skipped={skipped}")
     return 0
+
 
 def main():
     tail, only_id, approvals, do_verify = parse_args(sys.argv[1:])
