@@ -129,7 +129,7 @@ def main():
 
         if only_id is not None:
             aid = (r.get("extra", {}) or {}).get("approval_id")
-            if aid != only_id:
+            if aid != only_id and r.get("target") != only_id:
                 continue
 
         ts = fmt_ts(r.get("ts", ""))
