@@ -14,6 +14,7 @@ include <tunables/global>
   /home/*/.ssh/ rw,
   /home/*/.ssh/** rwk,
   /home/*/*.pub r,
+  /home/*/demo/*.pub r,
   /usr/bin/python3 ix,
   /usr/bin/python3.13 ix,
   /usr/local/sbin/secure-sshkeys r,
